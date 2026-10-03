@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>数据统计 · HUALIU工作台</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;}
+body{background:linear-gradient(145deg,#e8ecf1 0%,#d5dae0 100%);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",sans-serif;color:#1c1c1e;}
+.container{width:100%;height:100%;display:flex;flex-direction:column;}
+.header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px 10px;flex-shrink:0;background:rgba(255,255,255,0.12);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-bottom:0.5px solid rgba(255,255,255,0.25);}
+.header .brand{font-size:18px;font-weight:700;}
+.header .brand span{color:#ffdd22;}
+.content{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;}
+.stat-card{background:rgba(255,255,255,0.15);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:20px;padding:16px;border:0.5px solid rgba(255,255,255,0.2);box-shadow:inset 0 1px 0 rgba(255,255,255,0.3);}
+.stat-card .label{font-size:13px;color:rgba(0,0,0,0.5);margin-bottom:6px;}
+.stat-card .value{font-size:28px;font-weight:700;color:#1c1c1e;}
+.stat-card .sub{font-size:11px;color:rgba(0,0,0,0.3);margin-top:4px;}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.section-title{font-size:15px;font-weight:600;color:#1c1c1e;margin:8px 4px 4px;}
+.tab-bar{display:flex;justify-content:space-around;align-items:center;padding:8px 12px;padding-bottom:max(8px,env(safe-area-inset-bottom));background:rgba(255,255,255,0.18);backdrop-filter:blur(40px) saturate(180%);-webkit-backdrop-filter:blur(40px) saturate(180%);border-top:0.5px solid rgba(255,255,255,0.25);flex-shrink:0;box-shadow:0 -4px 20px rgba(0,0,0,0.04);}
+.tab-item{display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 16px;border-radius:14px;cursor:pointer;user-select:none;transition:all 0.2s;}
+.tab-item.active{background:rgba(255,221,34,0.25);}
+.tab-item svg{width:22px;height:22px;}
+.tab-item .tab-label{font-size:10px;font-weight:600;color:rgba(0,0,0,0.5);}
+.tab-item.active .tab-label{color:#1c1c1e;}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<div class="brand">数据<span>统计</span></div>
+</div>
+<div class="content">
+<div class="stat-grid">
+<div class="stat-card"><div class="label">今日会话</div><div class="value" id="todaySessions">0</div><div class="sub">较昨日 +0%</div></div>
+<div class="stat-card"><div class="label">今日消息</div><div class="value" id="todayMessages">0</div><div class="sub">用户 + 客服</div></div>
+<div class="stat-card"><div class="label">平均响应</div><div class="value">--</div><div class="sub">秒/条</div></div>
+<div class="stat-card"><div class="label">满意度</div><div class="value">--</div><div class="sub">暂无评价</div></div>
+</div>
+<div class="section-title">会话趋势</div>
+<div class="stat-card" style="text-align:center;padding:30px 16px;">
+<div style="font-size:14px;color:rgba(0,0,0,0.4);">数据统计功能开发中</div>
+<div style="font-size:12px;color:rgba(0,0,0,0.25);margin-top:6px;">敬请期待</div>
+</div>
+</div>
+<div class="tab-bar">
+<div class="tab-item" onclick="location.href='workbench.html'">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+<span class="tab-label">工作台</span>
+</div>
+<div class="tab-item active" onclick="location.href='stats.html'">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+<span class="tab-label">数据</span>
+</div>
+<div class="tab-item" onclick="location.href='settings.html'">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+<span class="tab-label">设置</span>
+</div>
+</div>
+</div>
+</body>
+</html>

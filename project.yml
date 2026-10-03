@@ -1,0 +1,37 @@
+name: HUALIUWorkbench
+options:
+  bundleIdPrefix: com.hualiu
+  deploymentTarget:
+    iOS: "16.0"
+settings:
+  base:
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+    DEVELOPMENT_TEAM: ""
+    CODE_SIGN_STYLE: Automatic
+    ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+    INFOPLIST_KEY_CFBundleDisplayName: HUALIU工作台
+    INFOPLIST_KEY_UIRequiresFullScreen: YES
+    INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait
+    INFOPLIST_KEY_NSAppTransportSecurity:
+      NSAllowsArbitraryLoads: YES
+targets:
+  HUALIUWorkbench:
+    type: application
+    platform: iOS
+    sources:
+      - path: HUALIUWorkbench
+    resources:
+      - path: HUALIUWorkbench/Assets
+    info:
+      path: HUALIUWorkbench/Info.plist
+      properties:
+        CFBundleDisplayName: HUALIU工作台
+        CFBundleShortVersionString: "1.0.0"
+        CFBundleVersion: "1"
+        UILaunchStoryboardName: ""
+        UIRequiresFullScreen: YES
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+        NSAppTransportSecurity:
+          NSAllowsArbitraryLoads: YES

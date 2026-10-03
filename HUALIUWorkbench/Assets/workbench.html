@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>客服工作台 · HUALIU</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;}
+body{background:linear-gradient(145deg,#e8ecf1 0%,#d5dae0 100%);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue",sans-serif;color:#1c1c1e;}
+.container{width:100%;height:100%;display:flex;flex-direction:column;}
+.header{display:flex;align-items:center;justify-content:space-between;padding:14px 20px 10px;flex-shrink:0;background:rgba(255,255,255,0.12);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-bottom:0.5px solid rgba(255,255,255,0.25);}
+.header .brand{font-size:18px;font-weight:700;color:#1c1c1e;}
+.header .brand span{color:#ffdd22;}
+.header .badge{font-size:11px;padding:3px 12px;border-radius:10px;background:rgba(52,199,89,0.12);color:#34c759;border:0.5px solid rgba(52,199,89,0.15);}
+.session-bar{display:flex;gap:8px;padding:8px 16px;overflow-x:auto;flex-shrink:0;background:rgba(255,255,255,0.06);border-bottom:0.5px solid rgba(255,255,255,0.1);white-space:nowrap;-webkit-overflow-scrolling:touch;}
+.session-bar::-webkit-scrollbar{display:none;}
+.session-tab{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:16px;background:rgba(255,255,255,0.12);border:0.5px solid rgba(255,255,255,0.15);font-size:13px;font-weight:500;color:#1c1c1e;cursor:pointer;user-select:none;transition:all 0.2s;flex-shrink:0;}
+.session-tab.active{background:rgba(255,221,34,0.3);border-color:rgba(255,221,34,0.3);font-weight:600;}
+.session-tab .unread{min-width:18px;height:18px;border-radius:9px;background:#ff3b30;color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 5px;}
+.session-tab .dot{width:6px;height:6px;border-radius:50%;background:#34c759;}
+.session-tab .dot.offline{background:rgba(0,0,0,0.2);}
+.chat-area{flex:1;overflow-y:auto;padding:12px 16px;display:flex;flex-direction:column;gap:8px;}
+.message{max-width:85%;padding:10px 16px;border-radius:20px;font-size:14px;line-height:1.6;word-break:break-word;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:0.5px solid rgba(255,255,255,0.3);box-shadow:inset 0 1px 0 rgba(255,255,255,0.4);}
+.message.user{align-self:flex-start;background:rgba(255,255,255,0.25);}
+.message.bot{align-self:flex-end;background:rgba(255,221,34,0.35);border-color:rgba(255,221,34,0.2);}
+.message.system{align-self:center;background:rgba(0,0,0,0.04);color:rgba(0,0,0,0.5);font-size:13px;border-radius:20px;padding:6px 16px;max-width:90%;}
+.message .time{font-size:10px;color:rgba(0,0,0,0.2);margin-top:4px;text-align:right;}
+.message .sender{font-size:11px;color:rgba(0,0,0,0.4);margin-bottom:2px;font-weight:600;}
+.empty-msg{text-align:center;color:rgba(0,0,0,0.2);font-size:14px;padding:40px 0;}
+.input-area{display:flex;gap:8px;padding:10px 16px 14px;background:rgba(255,255,255,0.12);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border-top:0.5px solid rgba(255,255,255,0.2);flex-shrink:0;padding-bottom:max(14px,env(safe-area-inset-bottom));}
+.input-area input{flex:1;padding:10px 16px;border-radius:20px;border:0.5px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.15);backdrop-filter:blur(8px);color:#1c1c1e;font-size:14px;outline:none;height:40px;}
+.input-area input:focus{border-color:rgba(255,221,34,0.4);background:rgba(255,255,255,0.2);}
+.input-area input:disabled{opacity:0.3;}
+.input-area button{padding:10px 22px;border-radius:20px;border:0.5px solid rgba(255,221,34,0.15);background:rgba(255,221,34,0.3);backdrop-filter:blur(8px);color:#1c1c1e;font-weight:600;font-size:14px;cursor:pointer;height:40px;flex-shrink:0;}
+.input-area button:active{transform:scale(0.95);}
+.input-area button:disabled{opacity:0.3;}
+.current-user-tip{text-align:center;font-size:11px;color:rgba(0,0,0,0.3);padding:4px 0 0;flex-shrink:0;}
+/* 液态玻璃底部Tab栏 */
+.tab-bar{display:flex;justify-content:space-around;align-items:center;padding:8px 12px;padding-bottom:max(8px,env(safe-area-inset-bottom));background:rgba(255,255,255,0.18);backdrop-filter:blur(40px) saturate(180%);-webkit-backdrop-filter:blur(40px) saturate(180%);border-top:0.5px solid rgba(255,255,255,0.25);flex-shrink:0;box-shadow:0 -4px 20px rgba(0,0,0,0.04);}
+.tab-item{display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 16px;border-radius:14px;cursor:pointer;user-select:none;transition:all 0.2s;}
+.tab-item.active{background:rgba(255,221,34,0.25);}
+.tab-item svg{width:22px;height:22px;}
+.tab-item .tab-label{font-size:10px;font-weight:600;color:rgba(0,0,0,0.5);}
+.tab-item.active .tab-label{color:#1c1c1e;}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<div class="brand">客服<span>工作台</span></div>
+<div class="badge" id="statusBadge">● 连接中</div>
+</div>
+<div class="session-bar" id="sessionBar"></div>
+<div class="current-user-tip" id="currentUserTip">请选择一个用户会话</div>
+<div class="chat-area" id="chatArea"></div>
+<div class="input-area">
+<input type="text" id="replyInput" placeholder="选择用户后输入回复..." autocomplete="off" disabled>
+<button id="replyBtn" disabled>发送</button>
+</div>
+<div class="tab-bar">
+<div class="tab-item active" onclick="location.href='workbench.html'">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+<span class="tab-label">工作台</span>
+</div>
+<div class="tab-item" onclick="location.href='stats.html'">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+<span class="tab-label">数据</span>
+</div>
+<div class="tab-item" onclick="location.href='settings.html'">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+<span class="tab-label">设置</span>
+</div>
+</div>
+</div>
+<script>
+(function(){
+var WS_URL='wss://hualiu-auth-server-production.up.railway.app/ws';
+var sessionBar=document.getElementById('sessionBar');
+var chatArea=document.getElementById('chatArea');
+var replyInput=document.getElementById('replyInput');
+var replyBtn=document.getElementById('replyBtn');
+var statusBadge=document.getElementById('statusBadge');
+var currentUserTip=document.getElementById('currentUserTip');
+var sessions={};
+var currentUserId=null;
+var unreadCounts={};
+var ws=null;
+var isConnected=false;
+
+function renderSessionBar(){
+  sessionBar.innerHTML='';
+  var userIds=Object.keys(sessions);
+  if(userIds.length===0){
+    var empty=document.createElement('div');
+    empty.style.cssText='font-size:13px;color:rgba(0,0,0,0.3);padding:4px 0;';
+    empty.textContent='暂无用户咨询';
+    sessionBar.appendChild(empty);
+    return;
+  }
+  userIds.forEach(function(userId){
+    var s=sessions[userId];
+    var tab=document.createElement('div');
+    tab.className='session-tab'+(userId===currentUserId?' active':'');
+    var dotHtml='<span class="dot'+(s.online?'':' offline')+'"></span>';
+    var unreadHtml=unreadCounts[userId]?'<span class="unread">'+unreadCounts[userId]+'</span>':'';
+    tab.innerHTML=dotHtml+'<span>'+s.username+'</span>'+unreadHtml;
+    tab.addEventListener('click',function(){
+      currentUserId=userId;
+      unreadCounts[userId]=0;
+      renderSessionBar();
+      renderChat();
+      updateInputState();
+    });
+    sessionBar.appendChild(tab);
+  });
+}
+
+function renderChat(){
+  chatArea.innerHTML='';
+  if(!currentUserId||!sessions[currentUserId]){
+    var empty=document.createElement('div');
+    empty.className='empty-msg';
+    empty.textContent='请选择上方的用户会话';
+    chatArea.appendChild(empty);
+    return;
+  }
+  var msgs=sessions[currentUserId].messages||[];
+  if(msgs.length===0){
+    var empty2=document.createElement('div');
+    empty2.className='empty-msg';
+    empty2.textContent='暂无消息';
+    chatArea.appendChild(empty2);
+    return;
+  }
+  msgs.forEach(function(msg){
+    var div=document.createElement('div');
+    div.className='message '+msg.role;
+    var senderHtml='';
+    if(msg.role==='user'){senderHtml='<div class="sender">'+sessions[currentUserId].username+'</div>';}
+    else if(msg.role==='bot'){senderHtml='<div class="sender">客服</div>';}
+    div.innerHTML=senderHtml+msg.text+'<div class="time">'+msg.time+'</div>';
+    chatArea.appendChild(div);
+  });
+  chatArea.scrollTop=chatArea.scrollHeight;
+}
+
+function updateInputState(){
+  var hasUser=!!currentUserId;
+  replyInput.disabled=!hasUser||!isConnected;
+  replyBtn.disabled=!hasUser||!isConnected;
+  if(hasUser&&sessions[currentUserId]){
+    currentUserTip.textContent='当前服务用户：'+sessions[currentUserId].username+(sessions[currentUserId].online?'（在线）':'（离线）');
+    replyInput.placeholder='回复 '+sessions[currentUserId].username+'...';
+  }else{
+    currentUserTip.textContent='请选择一个用户会话';
+    replyInput.placeholder='选择用户后输入回复...';
+  }
+}
+
+function updateStatus(){
+  if(isConnected){statusBadge.textContent='● 在线';statusBadge.style.color='#34c759';statusBadge.style.background='rgba(52,199,89,0.12)';statusBadge.style.borderColor='rgba(52,199,89,0.15)';}
+  else{statusBadge.textContent='● 连接中';statusBadge.style.color='rgba(0,0,0,0.4)';}
+}
+
+function sendReply(){
+  var text=replyInput.value.trim();
+  if(!text||!currentUserId||!isConnected)return;
+  if(ws&&ws.readyState===WebSocket.OPEN){
+    ws.send(JSON.stringify({type:'reply',userId:currentUserId,text:text}));
+  }
+  replyInput.value='';
+}
+
+function connectWS(){
+  ws=new WebSocket(WS_URL+'?agent=1');
+  ws.onopen=function(){isConnected=true;updateStatus();updateInputState();};
+  ws.onmessage=function(event){
+    try{
+      var data=JSON.parse(event.data);
+      if(data.type==='init'&&data.sessions){
+        data.sessions.forEach(function(s){
+          sessions[s.userId]={username:s.username,messages:s.messages||[],online:s.online};
+        });
+        if(!currentUserId&&data.sessions.length>0){
+          currentUserId=data.sessions[0].userId;
+        }
+        renderSessionBar();
+        renderChat();
+        updateInputState();
+      }
+      else if(data.type==='user_online'){
+        if(!sessions[data.userId]){
+          sessions[data.userId]={username:data.username,messages:data.messages||[],online:true};
+        }else{
+          sessions[data.userId].online=true;
+          sessions[data.userId].username=data.username;
+        }
+        if(!currentUserId)currentUserId=data.userId;
+        renderSessionBar();
+        if(currentUserId===data.userId)renderChat();
+        updateInputState();
+      }
+      else if(data.type==='user_offline'){
+        if(sessions[data.userId]){
+          sessions[data.userId].online=false;
+          renderSessionBar();
+          if(currentUserId===data.userId){renderChat();updateInputState();}
+        }
+      }
+      else if(data.type==='message'&&data.userId){
+        if(!sessions[data.userId]){
+          sessions[data.userId]={username:data.username||'未知用户',messages:[],online:true};
+        }
+        sessions[data.userId].messages.push(data.message);
+        if(data.message.role==='user'&&currentUserId!==data.userId){
+          unreadCounts[data.userId]=(unreadCounts[data.userId]||0)+1;
+        }
+        renderSessionBar();
+        if(currentUserId===data.userId)renderChat();
+      }
+    }catch(e){console.error('消息解析错误:',e);}
+  };
+  ws.onclose=function(){isConnected=false;updateStatus();updateInputState();setTimeout(connectWS,3000);};
+  ws.onerror=function(){isConnected=false;updateStatus();};
+}
+
+replyBtn.addEventListener('click',sendReply);
+replyInput.addEventListener('keydown',function(e){if(e.key==='Enter')sendReply();});
+
+connectWS();
+renderSessionBar();
+renderChat();
+updateInputState();
+})();
+</script>
+</body>
+</html>
